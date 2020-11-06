@@ -2246,7 +2246,8 @@ function createMessage(pytestResult) {
     //   }
     //   message += "|\n"
     // }
-    const newString = new String(pytestResult);
+    const file = fs.readFileSync(pytestResult);
+    const newString = new String(file);
     const lineOfText = newString.split('\n');
     let startKey = "0";
     let newMessage = "### Result of Coverage Tests\n";
@@ -2298,8 +2299,8 @@ function run() {
         }
         const githubToken = core.getInput("token");
         const pytestFileName = core.getInput("pytest-coverage");
-        const pytests = readJSON(pytestFileName);
-        const message = createMessage(pytests);
+        // const pytests = readJSON(pytestFileName);
+        const message = createMessage(pytestFileName);
         console.log(message);
         const context = github.context;
         const pullRequestNumber = context.payload.pull_request.number;

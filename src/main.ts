@@ -54,7 +54,8 @@ function createMessage(pytestResult: any) {
   //   }
   //   message += "|\n"
   // }
-  const newString = new String(pytestResult);
+  const file = fs.readFileSync(pytestResult)
+  const newString = new String(file);
 
   const lineOfText = newString.split('\n');
   let startKey = "0";
@@ -105,9 +106,9 @@ async function run(): Promise<void> {
   const githubToken = core.getInput("token");
   const pytestFileName = core.getInput("pytest-coverage");
 
-  const pytests = readJSON(pytestFileName);
+  // const pytests = readJSON(pytestFileName);
 
-  const message = createMessage(pytests);
+  const message = createMessage(pytestFileName);
   console.log(message);
 
   const context = github.context;
