@@ -1,11 +1,15 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Test Coverage at Comment'
+description: '-'
+author: 'Kuncoro Wicaksono'
 inputs:
-  milliseconds: # change this
+  pytest-coverage:
+    description: 'Where to find the txt output of pytest-coverage'
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    default: 'output.txt'
+  token:
+    description: 'GITHUB_TOKEN'
+    default: ${{ github.token }}
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'
