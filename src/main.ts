@@ -67,11 +67,12 @@ async function run(): Promise<void> {
   }
 
   const githubToken = core.getInput("token");
-  const pytestFileName = core.getInput("pytest-coverage");
+  // const pytestFileName = core.getInput("pytest-coverage");
 
   await execCommand("test/");
 
-  const message = createMessage(pytestFileName);
+  // const message = createMessage(pytestFileName);
+  const message = createMessage("output.txt");
   console.log(message);
 
   const context = github.context;
