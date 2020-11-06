@@ -2209,8 +2209,7 @@ function readJSON(filename) {
 function createMessage(pytestResult) {
     let message = "### Result of Coverage Tests\n";
     message += pytestResult;
-    message.replace(/Name                                                    Stmts   Miss  Cover/g, '|Name|Stmts|Miss|Cover|');
-    message.replace(/---------------------------------------------------------------------------/g, '|:--:|----:|---:|----:|');
+    let newMessage = message.replace(/Name                                                    Stmts   Miss  Cover/g, '|Name|Stmts|Miss|Cover|').replace(/---------------------------------------------------------------------------/g, '|:--:|----:|---:|----:|');
     // return message;
     // Table Title
     // message += "| Benchmark | Min | Max | Mean |";
@@ -2239,7 +2238,7 @@ function createMessage(pytestResult) {
     //   }
     //   message += "|\n"
     // }
-    return message;
+    return newMessage;
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
