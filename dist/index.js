@@ -2252,12 +2252,18 @@ function createMessage(pytestResult) {
     let startKey = "0";
     let newMessage = "### :white_check_mark: Result of Coverage Tests\n";
     let lastMessage = "";
+    let delLine = "";
     for (let i in lineOfText) {
         if (lineOfText[i].indexOf('coverage: platform') >= 0) {
             startKey = i;
             newMessage += "\n" + lineOfText[i] + "\n";
             delete lineOfText[i];
+            let iNext = (parseInt(i)) + 1;
+            delLine = iNext.toString();
             newMessage += "| Name | Stmts | Miss | Cover |\n| :--- | ----: | ---: | ----: |\n";
+        }
+        if (i == delLine) {
+            delete lineOfText[i];
         }
         if (startKey != "0" && lineOfText[i] != undefined) {
             if (lineOfText[i].indexOf('---------------------------------------------------------') >= 0) {
