@@ -2059,6 +2059,13 @@ exports.Context = Context;
 
 /***/ }),
 
+/***/ 58:
+/***/ (function(module) {
+
+module.exports = require("readline");
+
+/***/ }),
+
 /***/ 62:
 /***/ (function(__unusedmodule, exports) {
 
@@ -2196,6 +2203,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const core = __webpack_require__(186);
 const github = __webpack_require__(438);
 const fs = __webpack_require__(747);
+const rd = __webpack_require__(58);
 function readJSON(filename) {
     const rawdata = fs.readFileSync(filename);
     return rawdata;
@@ -2207,9 +2215,9 @@ function readJSON(filename) {
     // return benchmarks;
 }
 function createMessage(pytestResult) {
-    let message = "### Result of Coverage Tests\n";
-    message += pytestResult;
-    let newMessage = message.replace(/Name                                                    Stmts   Miss  Cover/g, '|Name|Stmts|Miss|Cover|').replace(/---------------------------------------------------------------------------/g, '|:--:|----:|---:|----:|');
+    // let message = "### Result of Coverage Tests\n";
+    // message += pytestResult;
+    // let newMessage = message.replace(/Name                                                    Stmts   Miss  Cover/g, '|Name|Stmts|Miss|Cover|').replace(/---------------------------------------------------------------------------/g, '|:--:|----:|---:|----:|');
     // return message;
     // Table Title
     // message += "| Benchmark | Min | Max | Mean |";
@@ -2238,7 +2246,45 @@ function createMessage(pytestResult) {
     //   }
     //   message += "|\n"
     // }
-    return newMessage;
+    const lineOfText = pytestResult.split('\n');
+    let startKey = "0";
+    let newMessage = "### Result of Coverage Tests\n";
+    let lastMessage = "";
+    for (let i in lineOfText) {
+        if (lineOfText[i].indexOf('coverage: platform darwin,') >= 0) {
+            startKey = i;
+            newMessage += lineOfText[i] + "\n";
+            delete lineOfText[i];
+        }
+        if (startKey != "0" && lineOfText[i] != undefined) {
+            if (lineOfText[i].indexOf('Name                                  Stmts   Miss  Cover') >= 0) {
+                newMessage += "| Name | Stmts | Miss | Cover |\n| :--- | ----: | ---: | ----: |\n";
+                delete lineOfText[i];
+            }
+            else if (lineOfText[i].indexOf('---------------------------------------------------------') >= 0) {
+                delete lineOfText[i];
+            }
+            else if (lineOfText[i].indexOf('passed in') >= 0) {
+                lastMessage = "\n" + lineOfText[i];
+                delete lineOfText[i];
+            }
+            if (lineOfText[i] != undefined) {
+                let tabOfText = lineOfText[i].split(/\s+/);
+                for (let t in tabOfText) {
+                    if (tabOfText[t] != "") {
+                        tabOfText[t] = "| " + tabOfText[t];
+                    }
+                    else {
+                        delete tabOfText[t];
+                    }
+                }
+                if (tabOfText[3] != undefined) {
+                    newMessage += tabOfText[0] + tabOfText[1] + tabOfText[2] + tabOfText[3] + "|\n";
+                }
+            }
+        }
+    }
+    return newMessage + lastMessage;
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {

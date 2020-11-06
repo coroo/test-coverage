@@ -1,6 +1,7 @@
 const core = require("@actions/core");
 const github = require("@actions/github");
 const fs = require("fs");
+const rd = require("readline");
 
 
 function readJSON(filename: string): any {
@@ -17,9 +18,9 @@ function readJSON(filename: string): any {
 }
 
 function createMessage(pytestResult: any) {
-  let message = "### Result of Coverage Tests\n";
-  message += pytestResult;
-  let newMessage = message.replace(/Name                                                    Stmts   Miss  Cover/g, '|Name|Stmts|Miss|Cover|').replace(/---------------------------------------------------------------------------/g, '|:--:|----:|---:|----:|');
+  // let message = "### Result of Coverage Tests\n";
+  // message += pytestResult;
+  // let newMessage = message.replace(/Name                                                    Stmts   Miss  Cover/g, '|Name|Stmts|Miss|Cover|').replace(/---------------------------------------------------------------------------/g, '|:--:|----:|---:|----:|');
   // return message;
 
   // Table Title
@@ -53,8 +54,41 @@ function createMessage(pytestResult: any) {
   //   }
   //   message += "|\n"
   // }
-
-  return newMessage;
+  const lineOfText = pytestResult.split('\n');
+  let startKey = "0";
+  let newMessage = "### Result of Coverage Tests\n";
+  let lastMessage = "";
+  for(let i in lineOfText){
+      if( lineOfText[i].indexOf('coverage: platform darwin,') >= 0){
+          startKey = i;
+          newMessage += lineOfText[i]+"\n"; delete lineOfText[i];
+      }
+      if(startKey != "0" && lineOfText[i]!=undefined){
+          if( lineOfText[i].indexOf('Name                                  Stmts   Miss  Cover') >= 0){
+              newMessage += "| Name | Stmts | Miss | Cover |\n| :--- | ----: | ---: | ----: |\n";
+              delete lineOfText[i];
+          }else if( lineOfText[i].indexOf('---------------------------------------------------------') >= 0){
+              delete lineOfText[i];
+          }else if( lineOfText[i].indexOf('passed in') >= 0){
+              lastMessage = "\n"+lineOfText[i];
+              delete lineOfText[i];
+          }
+          if(lineOfText[i]!=undefined){
+              let tabOfText = lineOfText[i].split(/\s+/);
+              for(let t in tabOfText){
+                  if(tabOfText[t]!=""){
+                      tabOfText[t] = "| "+tabOfText[t];
+                  } else {
+                      delete tabOfText[t];
+                  }
+              }
+              if(tabOfText[3]!=undefined){
+                  newMessage += tabOfText[0]+tabOfText[1]+tabOfText[2]+tabOfText[3]+"|\n";
+              }
+          }
+      }
+  }
+  return newMessage+lastMessage;
 }
 
 async function run(): Promise<void> {
