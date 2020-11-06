@@ -27,6 +27,9 @@ function createMessage(filename: any) {
           newMessage += "\n"+lineOfText[i]+"\n"; delete lineOfText[i]; 
           let iNext = (parseInt(i))+1; delLine = iNext.toString();
           newMessage += "| Name | Stmts | Miss | Cover |\n| :--- | ----: | ---: | ----: |\n";
+      } else {
+        newMessage += "TIDAK MASUK LAGI";
+        newMessage += lineOfText[i];
       }
       if( i == delLine ){
           delete lineOfText[i];

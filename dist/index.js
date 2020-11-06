@@ -2221,6 +2221,10 @@ function createMessage(filename) {
             delLine = iNext.toString();
             newMessage += "| Name | Stmts | Miss | Cover |\n| :--- | ----: | ---: | ----: |\n";
         }
+        else {
+            newMessage += "TIDAK MASUK LAGI";
+            newMessage += lineOfText[i];
+        }
         if (i == delLine) {
             delete lineOfText[i];
         }
