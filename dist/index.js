@@ -2263,7 +2263,7 @@ function run() {
         }
         const githubToken = core.getInput("token");
         const pytestFileName = core.getInput("pytest-coverage");
-        execCommand("test/");
+        yield execCommand("test/");
         const message = createMessage(pytestFileName);
         console.log(message);
         const context = github.context;
