@@ -2246,7 +2246,8 @@ function createMessage(pytestResult) {
     //   }
     //   message += "|\n"
     // }
-    const lineOfText = pytestResult.split('\n');
+    const newString = new String(pytestResult);
+    const lineOfText = newString.split('\n');
     let startKey = "0";
     let newMessage = "### Result of Coverage Tests\n";
     let lastMessage = "";
