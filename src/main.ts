@@ -17,11 +17,13 @@ function readJSON(filename: string): any {
 }
 
 function createMessage(pytestResult: any) {
-  let message = "## Result of Benchmark Tests\n";
+  let message = "### Result of Coverage Tests\n";
+  pytestResult.replace(/Name                                                    Stmts   Miss  Cover/g, '|Name|Stmts|Miss|Cover|');
+  pytestResult.replace(/---------------------------------------------------------------------------/g, '|:--:|----:|---:|----:|');
   message += pytestResult;
-  return message;
+  // return message;
 
-  // // Table Title
+  // Table Title
   // message += "| Benchmark | Min | Max | Mean |";
   // if(oldBenchmarks !== undefined) {
   //   message += " Mean on Repo `HEAD` |"
@@ -53,7 +55,7 @@ function createMessage(pytestResult: any) {
   //   message += "|\n"
   // }
 
-  // return message;
+  return message;
 }
 
 async function run(): Promise<void> {
@@ -84,7 +86,7 @@ async function run(): Promise<void> {
   const comment = comments.find((comment: any) => {
     return (
       comment.user.login === "github-actions[bot]" &&
-      comment.body.startsWith("## Result of Benchmark Tests\n")
+      comment.body.startsWith("### Result of Coverage Tests\n")
     );
   });
 

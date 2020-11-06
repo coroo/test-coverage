@@ -2207,10 +2207,12 @@ function readJSON(filename) {
     // return benchmarks;
 }
 function createMessage(pytestResult) {
-    let message = "## Result of Benchmark Tests\n";
+    let message = "### Result of Coverage Tests\n";
+    pytestResult.replace(/Name                                                    Stmts   Miss  Cover/g, '|Name|Stmts|Miss|Cover|');
+    pytestResult.replace(/---------------------------------------------------------------------------/g, '|:--:|----:|---:|----:|');
     message += pytestResult;
-    return message;
-    // // Table Title
+    // return message;
+    // Table Title
     // message += "| Benchmark | Min | Max | Mean |";
     // if(oldBenchmarks !== undefined) {
     //   message += " Mean on Repo `HEAD` |"
@@ -2237,7 +2239,7 @@ function createMessage(pytestResult) {
     //   }
     //   message += "|\n"
     // }
-    // return message;
+    return message;
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -2257,7 +2259,7 @@ function run() {
         const { data: comments } = yield octokit.issues.listComments(Object.assign(Object.assign({}, context.repo), { issue_number: pullRequestNumber }));
         const comment = comments.find((comment) => {
             return (comment.user.login === "github-actions[bot]" &&
-                comment.body.startsWith("## Result of Benchmark Tests\n"));
+                comment.body.startsWith("### Result of Coverage Tests\n"));
         });
         if (comment) {
             yield octokit.issues.updateComment(Object.assign(Object.assign({}, context.repo), { comment_id: comment.id, body: message }));
