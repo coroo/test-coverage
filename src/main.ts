@@ -67,6 +67,9 @@ function createMessage(pytestResult: any) {
           startKey = i;
           newMessage += "\n"+lineOfText[i]+"\n"; delete lineOfText[i];
           console.log(newMessage);
+      } else {
+          newMessage += "Tidak Masuk Key";
+          newMessage += lineOfText[i];
       }
       if(startKey != "0" && lineOfText[i]!=undefined){
           if( lineOfText[i].indexOf('Name                                  Stmts   Miss  Cover') >= 0){
@@ -94,8 +97,7 @@ function createMessage(pytestResult: any) {
           }
       }
   }
-  return newMessage;
-  // return newMessage+lastMessage;
+  return newMessage+lastMessage;
 }
 
 async function run(): Promise<void> {

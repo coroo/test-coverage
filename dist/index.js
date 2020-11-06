@@ -2260,6 +2260,10 @@ function createMessage(pytestResult) {
             delete lineOfText[i];
             console.log(newMessage);
         }
+        else {
+            newMessage += "Tidak Masuk Key";
+            newMessage += lineOfText[i];
+        }
         if (startKey != "0" && lineOfText[i] != undefined) {
             if (lineOfText[i].indexOf('Name                                  Stmts   Miss  Cover') >= 0) {
                 newMessage += "| Name | Stmts | Miss | Cover |\n| :--- | ----: | ---: | ----: |\n";
@@ -2289,8 +2293,7 @@ function createMessage(pytestResult) {
             }
         }
     }
-    return newMessage;
-    // return newMessage+lastMessage;
+    return newMessage + lastMessage;
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
