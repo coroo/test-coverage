@@ -63,13 +63,10 @@ function createMessage(pytestResult: any) {
   newMessage += "Test";
   let lastMessage = "";
   for(let i in lineOfText){
-      if( lineOfText[i].indexOf('coverage: platform darwin,') >= 0){
+      if( lineOfText[i].indexOf('coverage: platform') >= 0){
           startKey = i;
           newMessage += "\n"+lineOfText[i]+"\n"; delete lineOfText[i];
           console.log(newMessage);
-      } else {
-          newMessage += "Tidak Masuk Key";
-          newMessage += lineOfText[i];
       }
       if(startKey != "0" && lineOfText[i]!=undefined){
           if( lineOfText[i].indexOf('Name                                  Stmts   Miss  Cover') >= 0){
