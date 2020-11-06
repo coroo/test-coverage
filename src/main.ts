@@ -1,15 +1,11 @@
 const core = require("@actions/core");
 const github = require("@actions/github");
 const fs = require("fs");
-const { exec } = require('child_process');
+const exec = require('@actions/exec');
 
 
 function execCommand(testFolder: string): void {
-  exec('if [ -f .ignorecoveragerc ]; then pytest --cache-clear --cov=app --cov-config=.ignorecoveragerc test/ > output.txt; else pytest --cov=app test/; fi', (err: any, stdout: any, stderr: any) => {
-    if(err != null){
-        console.log(err);
-    }
-  });
+  exec.exec('pytest --cache-clear --cov=app --cov-config=.ignorecoveragerc test/ > output.txt');
 }
 
 function createMessage(filename: any) {
@@ -65,11 +61,11 @@ async function run(): Promise<void> {
     core.setFailed("Can only run on pull requests!");
     return;
   }
-
+  await execCommand("test/");
+  
   const githubToken = core.getInput("token");
   // const pytestFileName = core.getInput("pytest-coverage");
 
-  await execCommand("test/");
 
   // const message = createMessage(pytestFileName);
   const message = createMessage("output.txt");
