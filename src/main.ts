@@ -63,7 +63,8 @@ function createMessage(pytestResult: any) {
   for(let i in lineOfText){
       if( lineOfText[i].indexOf('coverage: platform darwin,') >= 0){
           startKey = i;
-          newMessage += lineOfText[i]+"\n"; delete lineOfText[i];
+          newMessage += "\n"+lineOfText[i]+"\n"; delete lineOfText[i];
+          console.log(newMessage);
       }
       if(startKey != "0" && lineOfText[i]!=undefined){
           if( lineOfText[i].indexOf('Name                                  Stmts   Miss  Cover') >= 0){
@@ -72,7 +73,7 @@ function createMessage(pytestResult: any) {
           }else if( lineOfText[i].indexOf('---------------------------------------------------------') >= 0){
               delete lineOfText[i];
           }else if( lineOfText[i].indexOf('passed in') >= 0){
-              lastMessage = "\n"+lineOfText[i];
+              lastMessage += "\n"+lineOfText[i];
               delete lineOfText[i];
           }
           if(lineOfText[i]!=undefined){
@@ -86,11 +87,13 @@ function createMessage(pytestResult: any) {
               }
               if(tabOfText[3]!=undefined){
                   newMessage += tabOfText[0]+tabOfText[1]+tabOfText[2]+tabOfText[3]+"|\n";
+                  console.log(newMessage);
               }
           }
       }
   }
-  return newMessage+lastMessage;
+  return newMessage;
+  // return newMessage+lastMessage;
 }
 
 async function run(): Promise<void> {
