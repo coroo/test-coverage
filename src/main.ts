@@ -54,12 +54,13 @@ function createMessage(pytestResult: any) {
   //   }
   //   message += "|\n"
   // }
-  const file = fs.readFileSync(pytestResult)
+  const file = fs.readFileSync(pytestResult);
   const newString = new String(file);
 
   const lineOfText = newString.split('\n');
   let startKey = "0";
   let newMessage = "### Result of Coverage Tests\n";
+  newMessage += "Test";
   let lastMessage = "";
   for(let i in lineOfText){
       if( lineOfText[i].indexOf('coverage: platform darwin,') >= 0){

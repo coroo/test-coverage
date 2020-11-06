@@ -2251,6 +2251,7 @@ function createMessage(pytestResult) {
     const lineOfText = newString.split('\n');
     let startKey = "0";
     let newMessage = "### Result of Coverage Tests\n";
+    newMessage += "Test";
     let lastMessage = "";
     for (let i in lineOfText) {
         if (lineOfText[i].indexOf('coverage: platform darwin,') >= 0) {
