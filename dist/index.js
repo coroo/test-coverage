@@ -2215,7 +2215,7 @@ function readJSON(filename) {
     // return benchmarks;
 }
 function createMessage(pytestResult) {
-    // let message = "### Result of Coverage Tests\n";
+    // let message = "### :white_check_mark: Result of Coverage Tests\n";
     // message += pytestResult;
     // let newMessage = message.replace(/Name                                                    Stmts   Miss  Cover/g, '|Name|Stmts|Miss|Cover|').replace(/---------------------------------------------------------------------------/g, '|:--:|----:|---:|----:|');
     // return message;
@@ -2250,25 +2250,21 @@ function createMessage(pytestResult) {
     const newString = new String(file);
     const lineOfText = newString.split('\n');
     let startKey = "0";
-    let newMessage = "### Result of Coverage Tests\n";
+    let newMessage = "### :white_check_mark: Result of Coverage Tests\n";
     let lastMessage = "";
     for (let i in lineOfText) {
         if (lineOfText[i].indexOf('coverage: platform') >= 0) {
             startKey = i;
             newMessage += "\n" + lineOfText[i] + "\n";
             delete lineOfText[i];
-            console.log(newMessage);
+            newMessage += "| Name | Stmts | Miss | Cover |\n| :--- | ----: | ---: | ----: |\n";
         }
         if (startKey != "0" && lineOfText[i] != undefined) {
-            if (lineOfText[i].indexOf('Name                                  Stmts   Miss  Cover') >= 0) {
-                newMessage += "| Name | Stmts | Miss | Cover |\n| :--- | ----: | ---: | ----: |\n";
-                delete lineOfText[i];
-            }
-            else if (lineOfText[i].indexOf('---------------------------------------------------------') >= 0) {
+            if (lineOfText[i].indexOf('---------------------------------------------------------') >= 0) {
                 delete lineOfText[i];
             }
             else if (lineOfText[i].indexOf('passed in') >= 0) {
-                lastMessage += "\n" + lineOfText[i];
+                lastMessage += "\n~" + lineOfText[i].replace(/=/g, "") + "~";
                 delete lineOfText[i];
             }
             if (lineOfText[i] != undefined) {
@@ -2308,7 +2304,7 @@ function run() {
         const { data: comments } = yield octokit.issues.listComments(Object.assign(Object.assign({}, context.repo), { issue_number: pullRequestNumber }));
         const comment = comments.find((comment) => {
             return (comment.user.login === "github-actions[bot]" &&
-                comment.body.startsWith("### Result of Coverage Tests\n"));
+                comment.body.startsWith("### :white_check_mark: Result of Coverage Tests\n"));
         });
         if (comment) {
             yield octokit.issues.updateComment(Object.assign(Object.assign({}, context.repo), { comment_id: comment.id, body: message }));
