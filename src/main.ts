@@ -18,9 +18,9 @@ function readJSON(filename: string): any {
 
 function createMessage(pytestResult: any) {
   let message = "### Result of Coverage Tests\n";
-  pytestResult.replace(/Name                                                    Stmts   Miss  Cover/g, '|Name|Stmts|Miss|Cover|');
-  pytestResult.replace(/---------------------------------------------------------------------------/g, '|:--:|----:|---:|----:|');
   message += pytestResult;
+  message.replace(/Name                                                    Stmts   Miss  Cover/g, '|Name|Stmts|Miss|Cover|');
+  message.replace(/---------------------------------------------------------------------------/g, '|:--:|----:|---:|----:|');
   // return message;
 
   // Table Title
