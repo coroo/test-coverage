@@ -2197,9 +2197,6 @@ const core = __webpack_require__(186);
 const github = __webpack_require__(438);
 const fs = __webpack_require__(747);
 const exec = __webpack_require__(514);
-function execCommand(testFolder) {
-    exec.exec('pytest --cache-clear --cov=app --cov-config=.ignorecoveragerc test/ > output.txt');
-}
 function createMessage(filename) {
     const file = fs.readFileSync(filename);
     const newString = new String(file);
@@ -2257,7 +2254,7 @@ function run() {
             core.setFailed("Can only run on pull requests!");
             return;
         }
-        yield execCommand("test/");
+        yield exec.exec('pytest --cache-clear --cov=app --cov-config=.ignorecoveragerc test/ > output.txt');
         const githubToken = core.getInput("token");
         // const pytestFileName = core.getInput("pytest-coverage");
         // const message = createMessage(pytestFileName);

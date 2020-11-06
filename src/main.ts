@@ -4,10 +4,6 @@ const fs = require("fs");
 const exec = require('@actions/exec');
 
 
-function execCommand(testFolder: string): void {
-  exec.exec('pytest --cache-clear --cov=app --cov-config=.ignorecoveragerc test/ > output.txt');
-}
-
 function createMessage(filename: any) {
   const file = fs.readFileSync(filename);
   const newString = new String(file);
@@ -61,7 +57,7 @@ async function run(): Promise<void> {
     core.setFailed("Can only run on pull requests!");
     return;
   }
-  await execCommand("test/");
+  await exec.exec('pytest --cache-clear --cov=app --cov-config=.ignorecoveragerc test/ > output.txt');
   
   const githubToken = core.getInput("token");
   // const pytestFileName = core.getInput("pytest-coverage");
