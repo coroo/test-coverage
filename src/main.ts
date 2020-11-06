@@ -1,60 +1,19 @@
 const core = require("@actions/core");
 const github = require("@actions/github");
 const fs = require("fs");
-const rd = require("readline");
+const { exec } = require('child_process');
 
 
-function readJSON(filename: string): any {
-  const rawdata = fs.readFileSync(filename);
-  return rawdata;
-  // const benchmarkJSON = JSON.parse(rawdata);
-
-  // let benchmarks : { [name: string] : Benchmark} = {};
-  // for(const benchmark of benchmarkJSON["benchmarks"]) {
-  //   benchmarks[benchmark["fullname"]] = new Benchmark(benchmark);
-  // }
-
-  // return benchmarks;
+function execCommand(testFolder: string): void {
+  exec('if [ -f .ignorecoveragerc ]; then pytest --cache-clear --cov=app --cov-config=.ignorecoveragerc test/ > output.txt; else pytest --cov=app test/; fi', (err: any, stdout: any, stderr: any) => {
+    if(err != null){
+        console.log(err);
+    }
+  });
 }
 
-function createMessage(pytestResult: any) {
-  // let message = "### :white_check_mark: Result of Coverage Tests\n";
-  // message += pytestResult;
-  // let newMessage = message.replace(/Name                                                    Stmts   Miss  Cover/g, '|Name|Stmts|Miss|Cover|').replace(/---------------------------------------------------------------------------/g, '|:--:|----:|---:|----:|');
-  // return message;
-
-  // Table Title
-  // message += "| Benchmark | Min | Max | Mean |";
-  // if(oldBenchmarks !== undefined) {
-  //   message += " Mean on Repo `HEAD` |"
-  // }
-  // message += "\n";
-
-  // // Table Column Definition
-  // message += "| :--- | :---: | :---: | :---: |";
-  // if(oldBenchmarks !== undefined) {
-  //   message += " :---: |"
-  // }
-  // message += "\n";
-
-  // // Table Rows
-  // for (const benchmarkName in pytestResult) {
-  //   const benchmark = pytestResult[benchmarkName];
-
-  //   message += `| ${benchmarkName}`;
-  //   message += `| ${benchmark.min}`;
-  //   message += `| ${benchmark.max}`;
-  //   message += `| ${benchmark.mean} `;
-  //   message += `+- ${benchmark.stddev} `;
-
-  //   if(oldpytestResult !== undefined) {
-  //     const oldBenchmark = oldpytestResult[benchmarkName]
-  //     message += `| ${oldBenchmark.mean} `;
-  //     message += `+- ${oldBenchmark.stddev} `;
-  //   }
-  //   message += "|\n"
-  // }
-  const file = fs.readFileSync(pytestResult);
+function createMessage(filename: any) {
+  const file = fs.readFileSync(filename);
   const newString = new String(file);
 
   const lineOfText = newString.split('\n');
@@ -107,7 +66,7 @@ async function run(): Promise<void> {
   const githubToken = core.getInput("token");
   const pytestFileName = core.getInput("pytest-coverage");
 
-  // const pytests = readJSON(pytestFileName);
+  execCommand("test/");
 
   const message = createMessage(pytestFileName);
   console.log(message);

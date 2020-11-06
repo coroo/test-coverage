@@ -2059,13 +2059,6 @@ exports.Context = Context;
 
 /***/ }),
 
-/***/ 58:
-/***/ (function(module) {
-
-module.exports = require("readline");
-
-/***/ }),
-
 /***/ 62:
 /***/ (function(__unusedmodule, exports) {
 
@@ -2203,50 +2196,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const core = __webpack_require__(186);
 const github = __webpack_require__(438);
 const fs = __webpack_require__(747);
-const rd = __webpack_require__(58);
-function readJSON(filename) {
-    const rawdata = fs.readFileSync(filename);
-    return rawdata;
-    // const benchmarkJSON = JSON.parse(rawdata);
-    // let benchmarks : { [name: string] : Benchmark} = {};
-    // for(const benchmark of benchmarkJSON["benchmarks"]) {
-    //   benchmarks[benchmark["fullname"]] = new Benchmark(benchmark);
-    // }
-    // return benchmarks;
+const { exec } = __webpack_require__(129);
+function execCommand(testFolder) {
+    exec('if [ -f .ignorecoveragerc ]; then pytest --cache-clear --cov=app --cov-config=.ignorecoveragerc test/ > output.txt; else pytest --cov=app test/; fi', (err, stdout, stderr) => {
+        if (err != null) {
+            console.log(err);
+        }
+    });
 }
-function createMessage(pytestResult) {
-    // let message = "### :white_check_mark: Result of Coverage Tests\n";
-    // message += pytestResult;
-    // let newMessage = message.replace(/Name                                                    Stmts   Miss  Cover/g, '|Name|Stmts|Miss|Cover|').replace(/---------------------------------------------------------------------------/g, '|:--:|----:|---:|----:|');
-    // return message;
-    // Table Title
-    // message += "| Benchmark | Min | Max | Mean |";
-    // if(oldBenchmarks !== undefined) {
-    //   message += " Mean on Repo `HEAD` |"
-    // }
-    // message += "\n";
-    // // Table Column Definition
-    // message += "| :--- | :---: | :---: | :---: |";
-    // if(oldBenchmarks !== undefined) {
-    //   message += " :---: |"
-    // }
-    // message += "\n";
-    // // Table Rows
-    // for (const benchmarkName in pytestResult) {
-    //   const benchmark = pytestResult[benchmarkName];
-    //   message += `| ${benchmarkName}`;
-    //   message += `| ${benchmark.min}`;
-    //   message += `| ${benchmark.max}`;
-    //   message += `| ${benchmark.mean} `;
-    //   message += `+- ${benchmark.stddev} `;
-    //   if(oldpytestResult !== undefined) {
-    //     const oldBenchmark = oldpytestResult[benchmarkName]
-    //     message += `| ${oldBenchmark.mean} `;
-    //     message += `+- ${oldBenchmark.stddev} `;
-    //   }
-    //   message += "|\n"
-    // }
-    const file = fs.readFileSync(pytestResult);
+function createMessage(filename) {
+    const file = fs.readFileSync(filename);
     const newString = new String(file);
     const lineOfText = newString.split('\n');
     let startKey = "0";
@@ -2300,7 +2259,7 @@ function run() {
         }
         const githubToken = core.getInput("token");
         const pytestFileName = core.getInput("pytest-coverage");
-        // const pytests = readJSON(pytestFileName);
+        execCommand("test/");
         const message = createMessage(pytestFileName);
         console.log(message);
         const context = github.context;
