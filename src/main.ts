@@ -57,6 +57,9 @@ async function run(): Promise<void> {
     core.setFailed("Can only run on pull requests!");
     return;
   }
+  await exec.exec('python -m pip install --upgrade pip');
+  await exec.exec('pip install flake8 pytest pytest-cov');
+  await exec.exec('if [ -f requirements.txt ]; then pip install -r requirements.txt; fi');
   await exec.exec('pytest --cache-clear --cov=app --cov-config=.ignorecoveragerc test/ > output.txt');
   
   const githubToken = core.getInput("token");

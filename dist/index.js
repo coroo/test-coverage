@@ -2254,6 +2254,9 @@ function run() {
             core.setFailed("Can only run on pull requests!");
             return;
         }
+        yield exec.exec('python -m pip install --upgrade pip');
+        yield exec.exec('pip install flake8 pytest pytest-cov');
+        yield exec.exec('if [ -f requirements.txt ]; then pip install -r requirements.txt; fi');
         yield exec.exec('pytest --cache-clear --cov=app --cov-config=.ignorecoveragerc test/ > output.txt');
         const githubToken = core.getInput("token");
         // const pytestFileName = core.getInput("pytest-coverage");
