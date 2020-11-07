@@ -1,15 +1,15 @@
-name: 'Test Coverage at Comment'
-description: '-'
+name: 'Pytest Coverage Commentator'
+description: 'A Github action to comments a Pytest Coverage on PR.'
 author: 'Kuncoro Wicaksono'
 inputs:
   pytest-coverage:
     description: 'Where to find the txt output of pytest-coverage'
     required: true
-    default: 'output.txt'
+    default: 'pytest-coverage.txt'
   token:
     description: 'GITHUB_TOKEN'
-    default: ${{ github.token }}
     required: true
+    default: ${{ github.token }}
 runs:
   using: 'node12'
   main: 'dist/index.js'

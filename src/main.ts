@@ -1,11 +1,10 @@
 const core = require("@actions/core");
 const github = require("@actions/github");
 const fs = require("fs");
-const exec = require('@actions/exec');
 
 
-function createMessage(filename: any) {
-  const file = fs.readFileSync(filename);
+function createMessage(pytestResult: any) {
+  const file = fs.readFileSync(pytestResult);
   const newString = new String(file);
 
   const lineOfText = newString.split('\n');
@@ -19,9 +18,6 @@ function createMessage(filename: any) {
           newMessage += "\n"+lineOfText[i]+"\n"; delete lineOfText[i]; 
           let iNext = (parseInt(i))+1; delLine = iNext.toString();
           newMessage += "| Name | Stmts | Miss | Cover |\n| :--- | ----: | ---: | ----: |\n";
-      } else {
-        newMessage += "TIDAK MASUK LAGI";
-        newMessage += lineOfText[i];
       }
       if( i == delLine ){
           delete lineOfText[i];
@@ -57,19 +53,11 @@ async function run(): Promise<void> {
     core.setFailed("Can only run on pull requests!");
     return;
   }
-  await exec.exec('python -m pip install --upgrade pip');
-  await exec.exec('pip install flake8 pytest pytest-cov');
-  await exec.exec('pip install -r requirements.txt');
-  await exec.exec('ls');
-  await exec.exec('pytest --cache-clear --cov=app --cov-config=.ignorecoveragerc test/ > output.txt');
-  
+
   const githubToken = core.getInput("token");
-  // const pytestFileName = core.getInput("pytest-coverage");
+  const pytestFileName = core.getInput("pytest-coverage");
 
-
-  // const message = createMessage(pytestFileName);
-  const message = createMessage("output.txt");
-  console.log(message);
+  const message = createMessage(pytestFileName);
 
   const context = github.context;
   const pullRequestNumber = context.payload.pull_request.number;
@@ -102,20 +90,6 @@ async function run(): Promise<void> {
       body: message
     });
   }
-
-  // try {
-  //   const ms: string = core.getInput('milliseconds')
-  //   core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-
-  //   core.debug(new Date().toTimeString())
-  //   await wait(parseInt(ms, 10))
-  //   core.debug(new Date().toTimeString())
-
-  //   core.setOutput('time', new Date().toTimeString())
-  // } catch (error) {
-  //   core.setFailed(error.message)
-  // }
 }
 
-// run()
 run().catch(error => core.setFailed("Workflow failed! " + error.message));
