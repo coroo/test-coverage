@@ -59,7 +59,7 @@ async function run(): Promise<void> {
   }
   await exec.exec('python -m pip install --upgrade pip');
   await exec.exec('pip install flake8 pytest pytest-cov');
-  await exec.exec('then pip install -r requirements.txt');
+  await exec.exec('pip install -r requirements.txt');
   await exec.exec('pytest --cache-clear --cov=app --cov-config=.ignorecoveragerc test/ > output.txt');
   
   const githubToken = core.getInput("token");
