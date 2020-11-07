@@ -6,8 +6,8 @@ A Github action to comments a Pytest Coverage on PR. Please note: this action on
 
 The following is an example GitHub Action workflow that uses the Pytest Coverage Commentator to extract the coverage to comment at pull request. Here is an example setup of this action:
 
-```
-# This workflow will install dependencies, run tests and install Pytest Coverage Commentator with a single version of Python
+```yaml
+# This workflow will install dependencies, create coverage tests and run Pytest Coverage Commentator
 # For more information see: https://github.com/coroo/pytest-coverage-commentator
 name: pytest-coverage-commentator
 on:
@@ -41,7 +41,7 @@ By default, action is designed to run with minimal configuration but you can alt
 
 Variable          | Default                                               | Purpose
 ------------------|-------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------
-pytest-coverage   | `pytest-coverage.txt`                                 | File conversion from pytest coverage. It will use to create a comment.
+pytest-coverage   | `pytest-coverage.txt`                                 | File conversion from pytest coverage. It will be used to create a comment.
 
 You can see the action block with all variables as below:
 
@@ -51,3 +51,7 @@ You can see the action block with all variables as below:
       with:
         pytest-coverage: pytest-coverage.txt
 ```
+
+## Result Example
+
+![coverage-result](/result-coverage.png)
