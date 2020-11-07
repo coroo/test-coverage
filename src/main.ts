@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable no-shadow */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/prefer-includes */
 /* eslint-disable @typescript-eslint/no-for-in-array */
-import core from '@actions/core'
-import github from '@actions/github'
-import fs from 'fs'
+const core = require('@actions/core')
+const github = require('@actions/github')
+const fs = require('fs')
 
 function createMessage(pytestResult: any): string {
   const file = fs.readFileSync(pytestResult)

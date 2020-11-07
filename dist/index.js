@@ -2180,7 +2180,7 @@ module.exports = {
 /***/ }),
 
 /***/ 109:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
+/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 "use strict";
 
@@ -2193,19 +2193,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable no-shadow */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/prefer-includes */
 /* eslint-disable @typescript-eslint/no-for-in-array */
-const core_1 = __importDefault(__webpack_require__(186));
-const github_1 = __importDefault(__webpack_require__(438));
-const fs_1 = __importDefault(__webpack_require__(747));
+const core = __webpack_require__(186);
+const github = __webpack_require__(438);
+const fs = __webpack_require__(747);
 function createMessage(pytestResult) {
-    const file = fs_1.default.readFileSync(pytestResult);
+    const file = fs.readFileSync(pytestResult);
     const newString = new String(file);
     const lineOfText = newString.split('\n');
     let startKey = '0';
@@ -2254,16 +2252,16 @@ function createMessage(pytestResult) {
 function run() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        if (github_1.default.context.eventName !== 'pull_request') {
-            core_1.default.setFailed('Can only run on pull requests!');
+        if (github.context.eventName !== 'pull_request') {
+            core.setFailed('Can only run on pull requests!');
             return;
         }
-        const githubToken = core_1.default.getInput('token');
-        const pytestFileName = core_1.default.getInput('pytest-coverage');
+        const githubToken = core.getInput('token');
+        const pytestFileName = core.getInput('pytest-coverage');
         const message = createMessage(pytestFileName);
-        const context = github_1.default.context;
+        const context = github.context;
         const pullRequestNumber = (_a = context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.number;
-        const octokit = github_1.default.getOctokit(githubToken);
+        const octokit = github.getOctokit(githubToken);
         // Now decide if we should issue a new comment or edit an old one
         const { data: comments } = yield octokit.issues.listComments(Object.assign(Object.assign({}, context.repo), { issue_number: pullRequestNumber !== null && pullRequestNumber !== void 0 ? pullRequestNumber : 0 }));
         const comment = comments.find((comment) => {
@@ -2279,7 +2277,7 @@ function run() {
     });
 }
 // eslint-disable-next-line github/no-then
-run().catch(error => core_1.default.setFailed(`Workflow failed! ${error.message}`));
+run().catch(error => core.setFailed(`Workflow failed! ${error.message}`));
 
 
 /***/ }),
