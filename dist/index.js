@@ -2257,6 +2257,7 @@ function run() {
         yield exec.exec('python -m pip install --upgrade pip');
         yield exec.exec('pip install flake8 pytest pytest-cov');
         yield exec.exec('pip install -r requirements.txt');
+        yield exec.exec('ls');
         yield exec.exec('pytest --cache-clear --cov=app --cov-config=.ignorecoveragerc test/ > output.txt');
         const githubToken = core.getInput("token");
         // const pytestFileName = core.getInput("pytest-coverage");
