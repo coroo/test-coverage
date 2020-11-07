@@ -2180,7 +2180,7 @@ module.exports = {
 /***/ }),
 
 /***/ 109:
-/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
 
 "use strict";
 
@@ -2193,50 +2193,58 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const core = __webpack_require__(186);
-const github = __webpack_require__(438);
-const fs = __webpack_require__(747);
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+/* eslint-disable no-shadow */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/prefer-includes */
+/* eslint-disable @typescript-eslint/no-for-in-array */
+const core_1 = __importDefault(__webpack_require__(186));
+const github_1 = __importDefault(__webpack_require__(438));
+const fs_1 = __importDefault(__webpack_require__(747));
 function createMessage(pytestResult) {
-    const file = fs.readFileSync(pytestResult);
+    const file = fs_1.default.readFileSync(pytestResult);
     const newString = new String(file);
     const lineOfText = newString.split('\n');
-    let startKey = "0";
-    let newMessage = "### :white_check_mark: Result of Pytest Coverage\n";
-    let lastMessage = "";
-    let delLine = "";
-    for (let i in lineOfText) {
+    let startKey = '0';
+    let newMessage = '### :white_check_mark: Result of Pytest Coverage\n';
+    let lastMessage = '';
+    let delLine = '';
+    for (const i in lineOfText) {
         if (lineOfText[i].indexOf('coverage: platform') >= 0) {
             startKey = i;
-            newMessage += "\n" + lineOfText[i] + "\n";
+            newMessage += `\n${lineOfText[i]}\n`;
             delete lineOfText[i];
-            let iNext = (parseInt(i)) + 1;
+            const iNext = parseInt(i) + 1;
             delLine = iNext.toString();
-            newMessage += "| Name | Stmts | Miss | Cover |\n| :--- | ----: | ---: | ----: |\n";
+            newMessage +=
+                '| Name | Stmts | Miss | Cover |\n| :--- | ----: | ---: | ----: |\n';
         }
-        if (i == delLine) {
+        if (i === delLine) {
             delete lineOfText[i];
         }
-        if (startKey != "0" && lineOfText[i] != undefined) {
+        if (startKey !== '0' && lineOfText[i] !== undefined) {
             if (lineOfText[i].indexOf('---------------------------------------------------------') >= 0) {
                 delete lineOfText[i];
             }
             else if (lineOfText[i].indexOf('passed in') >= 0) {
-                lastMessage += "\n~" + lineOfText[i].replace(/=/g, "") + "~";
+                lastMessage += `\n~${lineOfText[i].replace(/=/g, '')}~`;
                 delete lineOfText[i];
             }
-            if (lineOfText[i] != undefined) {
-                let tabOfText = lineOfText[i].split(/\s+/);
-                for (let t in tabOfText) {
-                    if (tabOfText[t] != "") {
-                        tabOfText[t] = "| " + tabOfText[t];
+            if (lineOfText[i] !== undefined) {
+                const tabOfText = lineOfText[i].split(/\s+/);
+                for (const t in tabOfText) {
+                    if (tabOfText[t] !== '') {
+                        tabOfText[t] = `| ${tabOfText[t]}`;
                     }
                     else {
                         delete tabOfText[t];
                     }
                 }
-                if (tabOfText[3] != undefined) {
-                    newMessage += tabOfText[0] + tabOfText[1] + tabOfText[2] + tabOfText[3] + "|\n";
-                    console.log(newMessage);
+                if (tabOfText[3] !== undefined) {
+                    newMessage += `${tabOfText[0] + tabOfText[1] + tabOfText[2] + tabOfText[3]}|\n`;
                 }
             }
         }
@@ -2244,32 +2252,34 @@ function createMessage(pytestResult) {
     return newMessage + lastMessage;
 }
 function run() {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        if (github.context.eventName !== "pull_request") {
-            core.setFailed("Can only run on pull requests!");
+        if (github_1.default.context.eventName !== 'pull_request') {
+            core_1.default.setFailed('Can only run on pull requests!');
             return;
         }
-        const githubToken = core.getInput("token");
-        const pytestFileName = core.getInput("pytest-coverage");
+        const githubToken = core_1.default.getInput('token');
+        const pytestFileName = core_1.default.getInput('pytest-coverage');
         const message = createMessage(pytestFileName);
-        const context = github.context;
-        const pullRequestNumber = context.payload.pull_request.number;
-        const octokit = github.getOctokit(githubToken);
+        const context = github_1.default.context;
+        const pullRequestNumber = (_a = context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.number;
+        const octokit = github_1.default.getOctokit(githubToken);
         // Now decide if we should issue a new comment or edit an old one
-        const { data: comments } = yield octokit.issues.listComments(Object.assign(Object.assign({}, context.repo), { issue_number: pullRequestNumber }));
+        const { data: comments } = yield octokit.issues.listComments(Object.assign(Object.assign({}, context.repo), { issue_number: pullRequestNumber !== null && pullRequestNumber !== void 0 ? pullRequestNumber : 0 }));
         const comment = comments.find((comment) => {
-            return (comment.user.login === "github-actions[bot]" &&
-                comment.body.startsWith("### :white_check_mark: Result of Pytest Coverage\n"));
+            return (comment.user.login === 'github-actions[bot]' &&
+                comment.body.startsWith('### :white_check_mark: Result of Pytest Coverage\n'));
         });
         if (comment) {
             yield octokit.issues.updateComment(Object.assign(Object.assign({}, context.repo), { comment_id: comment.id, body: message }));
         }
         else {
-            yield octokit.issues.createComment(Object.assign(Object.assign({}, context.repo), { issue_number: pullRequestNumber, body: message }));
+            yield octokit.issues.createComment(Object.assign(Object.assign({}, context.repo), { issue_number: pullRequestNumber !== null && pullRequestNumber !== void 0 ? pullRequestNumber : 0, body: message }));
         }
     });
 }
-run().catch(error => core.setFailed("Workflow failed! " + error.message));
+// eslint-disable-next-line github/no-then
+run().catch(error => core_1.default.setFailed(`Workflow failed! ${error.message}`));
 
 
 /***/ }),
