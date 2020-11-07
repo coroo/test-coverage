@@ -9,7 +9,7 @@ function createMessage(pytestResult: any) {
 
   const lineOfText = newString.split('\n');
   let startKey = "0";
-  let newMessage = "### :white_check_mark: Result of Coverage Tests\n";
+  let newMessage = "### :white_check_mark: Result of Pytest Coverage\n";
   let lastMessage = "";
   let delLine = "";
   for(let i in lineOfText){
@@ -73,7 +73,7 @@ async function run(): Promise<void> {
   const comment = comments.find((comment: any) => {
     return (
       comment.user.login === "github-actions[bot]" &&
-      comment.body.startsWith("### :white_check_mark: Result of Coverage Tests\n")
+      comment.body.startsWith("### :white_check_mark: Result of Pytest Coverage\n")
     );
   });
 

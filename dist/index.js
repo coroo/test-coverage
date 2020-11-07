@@ -2201,7 +2201,7 @@ function createMessage(pytestResult) {
     const newString = new String(file);
     const lineOfText = newString.split('\n');
     let startKey = "0";
-    let newMessage = "### :white_check_mark: Result of Coverage Tests\n";
+    let newMessage = "### :white_check_mark: Result of Pytest Coverage\n";
     let lastMessage = "";
     let delLine = "";
     for (let i in lineOfText) {
@@ -2259,7 +2259,7 @@ function run() {
         const { data: comments } = yield octokit.issues.listComments(Object.assign(Object.assign({}, context.repo), { issue_number: pullRequestNumber }));
         const comment = comments.find((comment) => {
             return (comment.user.login === "github-actions[bot]" &&
-                comment.body.startsWith("### :white_check_mark: Result of Coverage Tests\n"));
+                comment.body.startsWith("### :white_check_mark: Result of Pytest Coverage\n"));
         });
         if (comment) {
             yield octokit.issues.updateComment(Object.assign(Object.assign({}, context.repo), { comment_id: comment.id, body: message }));
